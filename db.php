@@ -1,15 +1,13 @@
 <?php
-// Database connection settings
-$servername = "localhost"; // or "127.0.0.1"
-$username = "root";        // default XAMPP MySQL username
-$password = "";            // default XAMPP MySQL password
+$host = "localhost";   // Change if necessary
 $dbname = "droguerie_db";  // Your database name
+$username = "root";  // Default XAMPP username
+$password = "";  // Default XAMPP password
 
-// Create the connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-// Check if the connection is successful
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
 }
 ?>
