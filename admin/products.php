@@ -169,6 +169,21 @@ if (isset($_POST['delete_product'])) {
         <input type="number" name="price" placeholder="Prix" required>
         <input type="date" name="expiry_date" required>
         <button type="submit" class="btn btn-primary" name="add_product">Ajouter</button>
+        <button type="button" class="btn btn-secondary close-modal">Annuler</button>
+    </form>
+</div>
+
+<div class="modal" id="editProductModal">
+    <form method="POST">
+        <h3>Modifier un Produit</h3>
+        <input type="hidden" name="product_id" id="edit_product_id">
+        <input type="text" name="name" id="edit_name" placeholder="Nom" required>
+        <input type="text" name="category" id="edit_category" placeholder="Catégorie" required>
+        <input type="number" name="quantity" id="edit_quantity" placeholder="Quantité" required>
+        <input type="number" name="price" id="edit_price" placeholder="Prix" required>
+        <input type="date" name="expiry_date" id="edit_expiry_date" required>
+        <button type="submit" class="btn btn-primary" name="edit_product">Modifier</button>
+        <button type="button" class="btn btn-secondary close-modal">Annuler</button>
     </form>
 </div>
 
@@ -190,19 +205,74 @@ document.querySelectorAll(".delete-btn").forEach(button => {
         }
     });
 });
-document.getElementById("openAddModal").addEventListener("click", function() {
-    document.querySelector(".overlay").style.display = "block";
-    document.getElementById("addProductModal").style.display = "block";
+
+// Edit button functionality
+document.querySelectorAll(".edit-btn").forEach(button => {
+    button.addEventListener("click", function() {
+        const id = this.getAttribute("data-id");
+        const name = this.getAttribute("data-name");
+        const category = this.getAttribute("data-category");
+        const quantity = this.getAttribute("data-quantity");
+        const price = this.getAttribute("data-price");
+        const expiry = this.getAttribute("data-expiry");
+
+        // Populate the edit form
+        document.getElementById("edit_product_id").value = id;
+        document.getElementById("edit_name").value = name;
+        document.getElementById("edit_category").value = category;
+        document.getElementById("edit_quantity").value = quantity;
+        document.getElementById("edit_price").value = price;
+        document.getElementById("edit_expiry_date").value = expiry;
+
+        // Show the edit modal
+        document.querySelector(".overlay").style.display = "block";
+        document.getElementById("editProductModal").style.display = "block";
+    });
 });
 
-document.querySelector(".close-modal").addEventListener("click", function() {
-    document.querySelector(".overlay").style.display = "none";
-    document.getElementById("addProductModal").style.display = "none";
+// Close modal functionality for both modals
+document.querySelectorAll(".close-modal").forEach(button => {
+    button.addEventListener("click", function() {
+        document.querySelector(".overlay").style.display = "none";
+        document.getElementById("addProductModal").style.display = "none";
+        document.getElementById("editProductModal").style.display = "none";
+    });
 });
 
+// Close modal when clicking overlay
 document.querySelector(".overlay").addEventListener("click", function() {
     document.querySelector(".overlay").style.display = "none";
     document.getElementById("addProductModal").style.display = "none";
+    document.getElementById("editProductModal").style.display = "none";
+});
+
+// Add keyboard support for closing modals
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        document.querySelector(".overlay").style.display = "none";
+        document.getElementById("addProductModal").style.display = "none";
+        document.getElementById("editProductModal").style.display = "none";
+    }
+});
+
+// Add form validation
+document.querySelectorAll("form").forEach(form => {
+    form.addEventListener("submit", function(e) {
+        const quantity = this.querySelector('input[name="quantity"]').value;
+        const price = this.querySelector('input[name="price"]').value;
+        
+        if (quantity < 0) {
+            e.preventDefault();
+            alert("La quantité ne peut pas être négative");
+            return;
+        }
+        
+        if (price < 0) {
+            e.preventDefault();
+            alert("Le prix ne peut pas être négatif");
+            return;
+        }
+    });
 });
 </script>
 </body>
